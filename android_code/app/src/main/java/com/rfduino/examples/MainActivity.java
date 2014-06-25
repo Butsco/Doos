@@ -1,51 +1,47 @@
 package com.rfduino.examples;
 
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
 import com.rfduino.R;
 import com.rfduino.core.BluetoothLEStack;
 
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.IntentFilter;
-import android.view.View;
-import android.app.ListActivity;
-import android.bluetooth.BluetoothDevice;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
-
 /**
  * ListAllExamples.java
- * 
+ * <p/>
  * This Activity:
  * 1.  loads a list of all possible example Activities for use with an RFDuino board and displays them in a clickable format
  * 2. Allows the user to select an Activity via a listElementListener.
  * 3. Performs a Bluetooth Low Energy device scan and displays available Bluetooth devices that can be used with the Activity
  * 4. Stores the selected BluetoothDevice as an "Extra" to pass to the new Activity's "onCreate" method when it is initialized.
- *   
+ *
  * @author adrienne
- * 
- * This library is released under the LGPL. A copy of the license should have been distributed with this library/source code,
- *  if not, you can read it here: (https://github.com/abolger/awesomesauce-rfduino/blob/master/LICENSE)
-*/
+ *         <p/>
+ *         This library is released under the LGPL. A copy of the license should have been distributed with this library/source code,
+ *         if not, you can read it here: (https://github.com/abolger/awesomesauce-rfduino/blob/master/LICENSE)
+ */
 
 public class MainActivity extends Activity {
 
-	Intent chosenExample;
-	BluetoothDevice chosenBluetoothDevice;
+    Intent chosenExample;
+    BluetoothDevice chosenBluetoothDevice;
     TextView mBluetoothStatusText;
     Boolean turnOnBluetoothWhenOff = false;
     Boolean searchWhenBluetoothTurnedOn = true;
-	
-	@Override
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main);
 
@@ -68,7 +64,7 @@ public class MainActivity extends Activity {
         // Register for broadcasts on BluetoothAdapter state change
         IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         this.registerReceiver(mReceiver, filter);
-	}
+    }
 
     private void restartBluetoothAndSearch() {
 
@@ -90,13 +86,13 @@ public class MainActivity extends Activity {
     }
 
     private void searchForDevices() {
-        BluetoothLEStack.beginSearchingForBluetoothDevices(MainActivity.this);
         chosenExample = new Intent(MainActivity.this, Doos.class);
 
         //Runs code that pops up a second list on the UI screen- this one shows all possible bluetooth devices that we can use in our examples.
-        runOnUiThread(new Runnable(){
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                BluetoothLEStack.beginSearchingForBluetoothDevices(MainActivity.this);
                 BluetoothLEStack.showFoundBluetoothDevices(MainActivity.this, rfduinoChosenListener);
             }
         });
@@ -107,8 +103,7 @@ public class MainActivity extends Activity {
         boolean isEnabled = bluetoothAdapter.isEnabled();
         if (enable && !isEnabled) {
             return bluetoothAdapter.enable();
-        }
-        else if(!enable && isEnabled) {
+        } else if (!enable && isEnabled) {
             return bluetoothAdapter.disable();
         }
         // No need to change bluetooth state
@@ -121,38 +116,50 @@ public class MainActivity extends Activity {
     }
 
     private void setBluetoothStatusText(final String text) {
-        runOnUiThread(new Runnable(){
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 mBluetoothStatusText.setText(text);
             }
         });
     }
-	
-	@Override 
-	public void onDestroy(){
-		BluetoothLEStack.stopSearchingForBluetoothDevices(this);
+
+    @Override
+    public void onDestroy() {
+        //Runs code that pops up a second list on the UI screen- this one shows all possible bluetooth devices that we can use in our examples.
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                BluetoothLEStack.stopSearchingForBluetoothDevices(MainActivity.this);
+            }
+        });
+
         this.unregisterReceiver(mReceiver);
-		super.onDestroy();
-	}
-	
-	
-	/** 
-	 * GUI OnClickListener: after a list of possible RFDuinos is displayed, this handler listens for a click in the list and connects
-	 * to the corresponding radio. 
-	 */
-	DialogInterface.OnClickListener rfduinoChosenListener = new DialogInterface.OnClickListener() {
-		
-		@Override
-		public void onClick(DialogInterface dialog, int which) {
-			BluetoothLEStack.stopSearchingForBluetoothDevices(MainActivity.this);
-			
-			chosenBluetoothDevice = BluetoothLEStack.discoveredDevices.get(which);
-			chosenExample.putExtra("bluetooth_device", chosenBluetoothDevice);
-			
-			startActivity(chosenExample);
-		}
-	};
+        super.onDestroy();
+    }
+
+
+    /**
+     * GUI OnClickListener: after a list of possible RFDuinos is displayed, this handler listens for a click in the list and connects
+     * to the corresponding radio.
+     */
+    DialogInterface.OnClickListener rfduinoChosenListener = new DialogInterface.OnClickListener() {
+
+        @Override
+        public void onClick(DialogInterface dialog, final int which) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    BluetoothLEStack.stopSearchingForBluetoothDevices(MainActivity.this);
+
+                    chosenBluetoothDevice = BluetoothLEStack.discoveredDevices.get(which);
+                    chosenExample.putExtra("bluetooth_device", chosenBluetoothDevice);
+
+                    startActivity(chosenExample);
+                }
+            });
+        }
+    };
 
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
