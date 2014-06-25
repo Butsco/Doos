@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pre-dex-items>
+
+    <item
+        dex="/Users/bert/Projects/Butts/Doos/android_code/app/build/intermediates/pre-dexed/debug/com.samsung.ble.sdk-1.0-3dc42319781b0c6fe7375bd035184b4ab24f6402.jar"
+        jar="/Users/bert/Projects/Butts/Doos/android_code/app/libs/com.samsung.ble.sdk-1.0.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="005d46d464d15aed68ef2f991d397d1d711422a1"/>
+    <item
+        dex="/Users/bert/Downloads/RFDuino-AndroidExamples/app/build/intermediates/pre-dexed/debug/com.samsung.ble.sdk-1.0-ef90ee82f6dbfb14e07b6e6af42b684640ca95c5.jar"
+        jar="/Users/bert/Downloads/RFDuino-AndroidExamples/app/libs/com.samsung.ble.sdk-1.0.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="005d46d464d15aed68ef2f991d397d1d711422a1"/>
+    <item
+        dex="/Users/bert/Downloads/RFDuino-AndroidExamples/app/build/intermediates/pre-dexed/debug/support-v4-19.1.0-fe930dc68beb1e566675ce71b270d4091c6c249b.jar"
+        jar="/Applications/Android Studio.app/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67"/>
+
+</pre-dex-items>
