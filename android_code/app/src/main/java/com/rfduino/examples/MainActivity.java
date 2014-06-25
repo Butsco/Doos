@@ -89,13 +89,9 @@ public class MainActivity extends Activity {
         chosenExample = new Intent(MainActivity.this, Doos.class);
 
         //Runs code that pops up a second list on the UI screen- this one shows all possible bluetooth devices that we can use in our examples.
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                BluetoothLEStack.beginSearchingForBluetoothDevices(MainActivity.this);
-                BluetoothLEStack.showFoundBluetoothDevices(MainActivity.this, rfduinoChosenListener);
-            }
-        });
+        BluetoothLEStack.beginSearchingForBluetoothDevices(MainActivity.this);
+        BluetoothLEStack.showFoundBluetoothDevices(MainActivity.this, rfduinoChosenListener);
+
     }
 
     private boolean setBluetooth(boolean enable) {
@@ -116,23 +112,13 @@ public class MainActivity extends Activity {
     }
 
     private void setBluetoothStatusText(final String text) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mBluetoothStatusText.setText(text);
-            }
-        });
+        mBluetoothStatusText.setText(text);
     }
 
     @Override
     public void onDestroy() {
         //Runs code that pops up a second list on the UI screen- this one shows all possible bluetooth devices that we can use in our examples.
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                BluetoothLEStack.stopSearchingForBluetoothDevices(MainActivity.this);
-            }
-        });
+        BluetoothLEStack.stopSearchingForBluetoothDevices(MainActivity.this);
 
         this.unregisterReceiver(mReceiver);
         super.onDestroy();
