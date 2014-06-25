@@ -81,7 +81,9 @@ import android.util.Log;
 							return; 
 						}
 					}
+
 					BluetoothLEStack.discoveredDevices.add(localBluetoothDevice);
+                    mAdapter.notifyDataSetChanged();
 				}
 			}
 			

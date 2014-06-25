@@ -58,6 +58,7 @@ public class SimpleBlePeripheralService extends Service {
 	public void disconnectLEDevice(BluetoothDevice paramBluetoothDevice) {
 		if (mBluetoothProfile != null){
 			mBluetoothProfile.disconnectLEDevice(paramBluetoothDevice);
+            mBluetoothProfile.unregister();
 			mBluetoothProfile.finish();
 			mBluetoothProfile = null;
 		}

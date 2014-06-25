@@ -80,8 +80,7 @@ public abstract class BluetoothLEStack {
 	public static ArrayList<BluetoothDevice> discoveredDevices = new ArrayList<BluetoothDevice>();
 	public static ProgressDialog bluetoothConnectionWaitWindow; 
 	protected static boolean scanning = false;
-	
-	
+    public static ArrayAdapter<BluetoothDevice> mAdapter;
 	
 	protected boolean disconnectCalled = false;
 	protected boolean successfulConnection = false;
@@ -97,11 +96,11 @@ public abstract class BluetoothLEStack {
 	public static void showFoundBluetoothDevices(Context hostActivity, OnClickListener rfduinoChosenListener) {
 		//An ArrayAdapter is a connector class: the adapter automatically checks for updates in our underlying datastructure and 
 		// populates the results (Bluetooth radios in our case) to the ListView to be seen by the user. 
-		ArrayAdapter<BluetoothDevice> adapter = new ArrayAdapter<BluetoothDevice>(hostActivity, android.R.layout.select_dialog_item, BluetoothLEStack.discoveredDevices);
+		mAdapter = new ArrayAdapter<BluetoothDevice>(hostActivity, android.R.layout.select_dialog_item, BluetoothLEStack.discoveredDevices);
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(hostActivity);
 		    builder.setTitle("Choose an available RFDuino radio:")
-		    	   .setAdapter(adapter, rfduinoChosenListener);
+		    	   .setAdapter(mAdapter, rfduinoChosenListener);
 		   
 		builder.show();
 	}
