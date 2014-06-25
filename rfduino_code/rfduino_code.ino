@@ -25,9 +25,21 @@ int debounce_time = 10;
 // maximum debounce timeout (in ms)
 int debounce_timeout = 100;
 
+// sensor stuff
+int sensor = 2;
+long lastDebounceTime = 0;
+long debounceDelay = 1000;
+int state = 0;
+int reading = HIGH;
+
 void setup() {
+  Serial.begin(9600);
+  Serial.println("start app");
+  
   // led turned on/off from the iPhone app
   pinMode(led, OUTPUT);
+
+  pinMode(sensor, INPUT);
 
   // button press will be shown on the iPhone app)
   pinMode(button, INPUT);
@@ -78,12 +90,37 @@ int delay_until_button(int state)
   }
 }
 
+void debounce_sensor() {
+  reading = digitalRead(sensor);
+  
+//  Serial.print("reading ");
+//  Serial.print(reading);
+//  Serial.print("\n");
+  
+  if (reading == LOW && state == HIGH) {
+    lastDebounceTime = millis();
+    Serial.print("x");
+    state = LOW;
+  } else if (reading == HIGH && state == LOW && (millis() - lastDebounceTime) > debounceDelay) {
+    state = HIGH;
+  }
+}
+
 void loop() {
+  // sensor
+  debounce_sensor();
+  if (state == LOW) {
+    RFduinoBLE.send(1);
+  }
+  
+  /*
+  // button
   delay_until_button(HIGH);
   RFduinoBLE.send(1);
   
   delay_until_button(LOW);
   //RFduinoBLE.send(0);
+  */
 }
 
 void RFduinoBLE_onDisconnect()
