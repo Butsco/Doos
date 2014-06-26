@@ -99,7 +99,7 @@ public abstract class BluetoothLEStack {
 		mAdapter = new ArrayAdapter<BluetoothDevice>(hostActivity, android.R.layout.select_dialog_item, BluetoothLEStack.discoveredDevices);
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(hostActivity);
-		    builder.setTitle("Choose an available RFDuino radio:")
+		    builder.setTitle("Choose an available RFDuino radio (C9:F3:90:F0:48:0A is 'em)")
 		    	   .setAdapter(mAdapter, rfduinoChosenListener);
 		   
 		builder.show();

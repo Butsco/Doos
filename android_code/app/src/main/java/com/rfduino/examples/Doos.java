@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import com.rfduino.R;
 import com.rfduino.core.BluetoothLEStack;
 import com.rfduino.core.RFDuinoSystemCharacteristics;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +34,8 @@ public class Doos extends Activity {
 	BluetoothLEStack rfduinoConnection;
 	BluetoothDevice chosenBluetoothDevice;
 	TextView buttonPressEventDisplay;
-    MediaPlayer mMediaPlayer;
+    String[] mSounds = new String[]{"cookies_yeah", "hello_there", "hom_nomnomnom", "hom_nomnomnom2", "is_it_an_orange", "is_it_cookie", "it_s_a_cookie", "very_good"};
+    ArrayList<MediaPlayer> mMediaPlayers;
 	
 	/** Tell the Bluetooth manager what to do if user decides not to connect anymore. **/
 	OnCancelListener onCancelConnectionAttempt = new OnCancelListener(){
@@ -50,7 +53,11 @@ public class Doos extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.play_sound);
 
-        mMediaPlayer = MediaPlayer.create(this, R.raw.badabing);
+        mMediaPlayers = new ArrayList<MediaPlayer>();
+        for (String sound : mSounds) {
+            int resId = resId = getResources().getIdentifier("raw/"+sound, null, this.getPackageName());
+            mMediaPlayers.add(MediaPlayer.create(this, resId));
+        }
 
 		buttonPressEventDisplay = (TextView) findViewById(R.id.buttonPressNotification);
 
@@ -101,7 +108,7 @@ public class Doos extends Activity {
 					String newText = buttonPressEventDisplay.getText() + "*";
 					buttonPressEventDisplay.setText(newText);
 
-                    mMediaPlayer.start();
+                    playSound();
 				}
 				
 			});
@@ -111,7 +118,10 @@ public class Doos extends Activity {
 	};
 	
 	
-
+    private void playSound() {
+        int randomIndex = (int) Math.floor(Math.random() * mMediaPlayers.size());
+        mMediaPlayers.get(randomIndex).start();
+    }
 	
 	
 	private Runnable turnOff =  new Runnable(){
